@@ -119,7 +119,8 @@ test('buildReport aggregates summary metrics and terminal output', () => {
   const terminal = renderTerminalSummary(report)
   assert.match(terminal, /Codex Insights/)
   assert.match(terminal, /Analysis cost: 1.3K tokens across 5 model calls/)
-  assert.match(terminal, /Top Tools:/)
+  assert.match(terminal, /Top Projects:/)
+  assert.match(terminal, /Model Mix:/)
 })
 
 test('writeReportFiles writes JSON and HTML outputs', async () => {
