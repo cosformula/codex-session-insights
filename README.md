@@ -108,8 +108,8 @@ npx codex-session-insights --provider openai --api-key $OPENAI_API_KEY
 Current default analysis plan:
 
 - `days`: `30`
-- `limit`: `50`
-- `facet-limit`: `20`
+- `limit`: `200`
+- `facet-limit`: `50`
 - `provider`: `codex-cli`
 - `facet-model`: `gpt-5.4-mini`
 - `fast-section-model`: `gpt-5.4-mini`
@@ -120,6 +120,8 @@ Current default analysis plan:
 
 Important behavior defaults:
 
+- `limit` means the target number of substantive threads to include in the report, not just the first 50 indexed threads
+- `facet-limit` means the max number of uncached per-thread facet analyses to run in a single report
 - Report language follows a best-effort system locale check
 - Main-thread analysis is the default; sub-agent threads are excluded unless you pass `--include-subagents`
 - The CLI shows an estimate before running in interactive terminals

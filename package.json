@@ -1,6 +1,6 @@
 {
   "name": "codex-session-insights",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Generate a report analyzing your Codex sessions.",
   "type": "module",
   "bin": {

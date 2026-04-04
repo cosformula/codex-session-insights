@@ -27,11 +27,11 @@ test('applyScopePreset maps standard presets to expected limits', () => {
     facetLimit: 8,
   })
   assert.deepEqual(cliTest.applyScopePreset({}, 'standard'), {
-    limit: 50,
-    facetLimit: 20,
+    limit: 200,
+    facetLimit: 50,
   })
   assert.deepEqual(cliTest.applyScopePreset({}, 'deep'), {
-    limit: 200,
+    limit: 400,
     facetLimit: 50,
   })
 })
