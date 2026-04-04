@@ -1,0 +1,6 @@
+node_modules/
+codex-insights-output/
+tmp-report/
+tmp-report-usage/
+test-artifacts/
+.DS_Store

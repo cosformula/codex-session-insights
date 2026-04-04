@@ -1,0 +1,47 @@
+{
+  "name": "codex-session-insights",
+  "version": "0.1.0",
+  "description": "Generate a report analyzing your Codex sessions.",
+  "type": "module",
+  "bin": {
+    "codex-session-insights": "./bin/codex-insights.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cosformula/codex-session-insights.git"
+  },
+  "homepage": "https://github.com/cosformula/codex-session-insights#readme",
+  "bugs": {
+    "url": "https://github.com/cosformula/codex-session-insights/issues"
+  },
+  "scripts": {
+    "report": "node ./bin/codex-insights.js report",
+    "generate:test-report": "node ./scripts/generate-test-report.mjs",
+    "test": "node --test",
+    "check": "node --check ./bin/codex-insights.js && node --check ./lib/cli.js && node --check ./lib/codex-data.js && node --check ./lib/report.js && node --check ./lib/llm-insights.js && node --check ./lib/model-provider.js && npm run typecheck",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "codex",
+    "insights",
+    "cli",
+    "report"
+  ],
+  "dependencies": {
+    "@inquirer/prompts": "^7.8.6",
+    "ora": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.0",
+    "typescript": "^5.9.3"
+  }
+}
