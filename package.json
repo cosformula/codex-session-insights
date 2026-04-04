@@ -1,6 +1,6 @@
 {
   "name": "codex-session-insights",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Generate a report analyzing your Codex sessions.",
   "type": "module",
   "bin": {
@@ -25,6 +25,7 @@
   },
   "scripts": {
     "report": "node ./bin/codex-insights.js report",
+    "report:lite": "node ./bin/codex-insights.js --preset lite --yes",
     "generate:test-report": "node ./scripts/generate-test-report.mjs",
     "test": "node --test",
     "check": "node --check ./bin/codex-insights.js && node --check ./lib/cli.js && node --check ./lib/codex-data.js && node --check ./lib/report.js && node --check ./lib/llm-insights.js && node --check ./lib/model-provider.js && npm run typecheck",

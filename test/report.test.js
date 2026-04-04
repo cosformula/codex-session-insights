@@ -109,6 +109,10 @@ test('buildReport aggregates summary metrics and terminal output', () => {
     byModel: [],
     byStage: [],
   }
+  report.analysisEstimate = {
+    estimatedTotalTokens: 1200,
+    estimatedRange: { low: 1000, high: 1600 },
+  }
 
   assert.equal(report.metadata.threadCount, 2)
   assert.equal(report.summary.totalUserMessages, 8)
@@ -119,6 +123,7 @@ test('buildReport aggregates summary metrics and terminal output', () => {
   const terminal = renderTerminalSummary(report)
   assert.match(terminal, /Codex Insights/)
   assert.match(terminal, /Analysis cost: 1.3K tokens across 5 model calls/)
+  assert.match(terminal, /Estimate vs Actual: 1.2K tokens -> 0.9K tokens \(fresh\)/)
   assert.match(terminal, /Top Projects:/)
   assert.match(terminal, /Model Mix:/)
 })
@@ -186,6 +191,10 @@ test('writeReportFiles writes JSON and HTML outputs', async () => {
     byModel: [],
     byStage: [],
   }
+  report.analysisEstimate = {
+    estimatedTotalTokens: 1000,
+    estimatedRange: { low: 800, high: 1350 },
+  }
 
   const { jsonPath, htmlPath } = await writeReportFiles(report, { outDir: tempDir })
   const html = await fs.readFile(htmlPath, 'utf8')
@@ -195,6 +204,7 @@ test('writeReportFiles writes JSON and HTML outputs', async () => {
   assert.match(html, /Strong editing loops\./)
   assert.match(html, /Copy All Checked/)
   assert.match(html, /Paste into Codex:/)
+  assert.match(html, /Estimate vs Actual/)
   assert.equal(json.insights.at_a_glance.quick_wins, 'Add more repo memory.')
 })
 

@@ -127,6 +127,7 @@ test('summarizeThread extracts tool, patch, git, and failure signals', () => {
   assert.deepEqual(summary.toolFailures, { git_push: 1 })
   assert.match(summary.transcriptForAnalysis, /\[Tool: apply_patch\]/)
   assert.match(summary.transcriptForAnalysis, /\[Command failed: git_push\]/)
+  assert.doesNotMatch(summary.transcriptForAnalysis, /I am checking the parser flow/)
   assert.deepEqual(summary.tokenUsage, {
     inputTokens: 120,
     cachedInputTokens: 30,
@@ -150,4 +151,47 @@ test('filterSubstantiveThreads keeps only substantial threads and sorts by recen
     filtered.map(thread => thread.id),
     ['recent', 'older'],
   )
+})
+
+test('summarizeThread compacts consecutive tool bursts in transcriptForAnalysis', () => {
+  const thread = {
+    id: 'thread-tools',
+    title: 'Burst',
+    firstUserMessage: 'Check the repo.',
+    cwd: '/repo/project',
+    model: 'gpt-5.4',
+    modelProvider: 'openai',
+    createdAt: Date.parse('2026-04-01T10:00:00Z') / 1000,
+    updatedAt: Date.parse('2026-04-01T10:03:00Z') / 1000,
+    tokensUsed: 100,
+  }
+
+  const events = [
+    {
+      timestamp: '2026-04-01T10:00:00Z',
+      type: 'event_msg',
+      payload: { type: 'user_message', message: 'Check the repo.' },
+    },
+    {
+      timestamp: '2026-04-01T10:00:05Z',
+      type: 'response_item',
+      payload: { type: 'function_call', name: 'exec_command', arguments: '{}' },
+    },
+    {
+      timestamp: '2026-04-01T10:00:06Z',
+      type: 'response_item',
+      payload: { type: 'function_call', name: 'apply_patch', arguments: '{}' },
+    },
+    {
+      timestamp: '2026-04-01T10:00:07Z',
+      type: 'response_item',
+      payload: { type: 'function_call', name: 'web.search_query', arguments: '{}' },
+    },
+  ]
+
+  const summary = summarizeThread(thread, events)
+
+  assert.match(summary.transcriptForAnalysis, /\[Tool: exec_command\]/)
+  assert.match(summary.transcriptForAnalysis, /\[Tool: apply_patch\]/)
+  assert.match(summary.transcriptForAnalysis, /\[Tool activity truncated: 1 more tool calls\]/)
 })

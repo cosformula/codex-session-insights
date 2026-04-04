@@ -22,9 +22,17 @@ test('detectSystemLanguage follows locale environment', () => {
 })
 
 test('applyScopePreset maps standard presets to expected limits', () => {
-  assert.deepEqual(cliTest.applyScopePreset({}, 'conservative'), {
+  assert.deepEqual(cliTest.applyScopePreset({}, 'lite'), {
+    days: 7,
     limit: 20,
     facetLimit: 8,
+    preview: 10,
+  })
+  assert.deepEqual(cliTest.applyScopePreset({}, 'conservative'), {
+    days: 7,
+    limit: 20,
+    facetLimit: 8,
+    preview: 10,
   })
   assert.deepEqual(cliTest.applyScopePreset({}, 'standard'), {
     limit: 200,
@@ -34,6 +42,27 @@ test('applyScopePreset maps standard presets to expected limits', () => {
     limit: 400,
     facetLimit: 50,
   })
+})
+
+test('parseArgs keeps explicit scope flags over preset defaults', () => {
+  const parsed = cliTest.parseArgs([
+    '--preset',
+    'lite',
+    '--days',
+    '14',
+    '--limit',
+    '30',
+    '--preview',
+    '12',
+    '--facet-limit',
+    '9',
+  ])
+
+  assert.equal(parsed.options.preset, 'lite')
+  assert.equal(parsed.options.days, 14)
+  assert.equal(parsed.options.limit, 30)
+  assert.equal(parsed.options.preview, 12)
+  assert.equal(parsed.options.facetLimit, 9)
 })
 
 test('applyQualityPreset maps balanced preset to default model plan', () => {

@@ -60,6 +60,12 @@ Default run:
 npx codex-session-insights
 ```
 
+Lite local run for prompt and layout testing:
+
+```bash
+npx codex-session-insights --preset lite
+```
+
 Estimate first, then decide:
 
 ```bash
@@ -120,6 +126,7 @@ Current default analysis plan:
 
 Important behavior defaults:
 
+- `--preset lite` maps to `days=7`, `limit=20`, `facet-limit=8`, `preview=10`
 - `limit` means the target number of substantive threads to include in the report, not just the first 50 indexed threads
 - `facet-limit` means the max number of uncached per-thread facet analyses to run in a single report
 - Report language follows a best-effort system locale check
@@ -195,7 +202,9 @@ Useful local commands:
 npm install
 npm test
 npm run check
+npm run report:lite
 npm run generate:test-report
 ```
 
+`npm run report:lite` runs a smaller local analysis preset for testing prompt and layout changes without paying the full 200/50 default cost.
 `npm run generate:test-report` writes a deterministic sample report page to `test-artifacts/sample-report/`.
