@@ -1,8 +1,8 @@
-# codex-insights
+# codex-session-insights
 
-Generate a Claude Code `/insights` style report from local Codex session data.
+Generate a report analyzing your Codex sessions.
 
-`codex-insights` reads your local Codex thread registry and rollout logs, extracts per-session facets, and renders a narrative usage report as both JSON and HTML.
+`codex-session-insights` reads your local Codex thread registry and rollout logs, extracts per-session facets, and renders a narrative report as both JSON and HTML.
 
 ## What It Reads
 
@@ -11,8 +11,8 @@ Generate a Claude Code `/insights` style report from local Codex session data.
 
 ## What It Writes
 
-- `report.json`
-- `report.html`
+- `~/.codex/usage-data/report.json` by default
+- `~/.codex/usage-data/report.html` by default
 
 ## Requirements
 
@@ -31,7 +31,7 @@ Supported platform status:
 After publishing:
 
 ```bash
-npx codex-insights report --estimate-only
+npx codex-session-insights report --estimate-only
 ```
 
 For local development:
@@ -45,7 +45,7 @@ node ./bin/codex-insights.js report --estimate-only
 1. Estimate first
 
 ```bash
-npx codex-insights report \
+npx codex-session-insights report \
   --days 7 \
   --limit 20 \
   --facet-limit 8 \
@@ -56,7 +56,7 @@ npx codex-insights report \
 2. If the estimate looks reasonable, run the full report
 
 ```bash
-npx codex-insights report \
+npx codex-session-insights report \
   --days 7 \
   --limit 20 \
   --facet-limit 8 \
@@ -68,23 +68,33 @@ npx codex-insights report \
 Default provider uses your logged-in Codex CLI:
 
 ```bash
-npx codex-insights report
+npx codex-session-insights report
 ```
+
+In an interactive terminal, the CLI now shows a lightweight confirmation flow first:
+
+- it starts from a default plan
+- shows the estimate before analysis
+- lets you `Start`, `Adjust settings`, or `Exit`
+
+It defaults the report language from a best-effort system locale check. Use `--lang en`, `--lang zh-CN`, or `CODEX_REPORT_LANG=...` to override it.
+
+After generation, the CLI will try to open `report.html` in your browser. Use `--no-open` to suppress that, or `--open` to force it.
 
 A few useful variants:
 
 ```bash
-npx codex-insights report --days 90 --limit 200
-npx codex-insights report --out-dir ./insights-output
-npx codex-insights report --stdout-json
-npx codex-insights report --include-archived
-npx codex-insights report --provider openai --api-key $OPENAI_API_KEY
+npx codex-session-insights report --days 90 --limit 200
+npx codex-session-insights report --out-dir ./insights-output
+npx codex-session-insights report --stdout-json
+npx codex-session-insights report --include-archived
+npx codex-session-insights report --provider openai --api-key $OPENAI_API_KEY
 ```
 
 Model overrides:
 
 ```bash
-npx codex-insights report \
+npx codex-session-insights report \
   --facet-model gpt-5.3-codex-spark \
   --fast-section-model gpt-5.3-codex-spark \
   --insight-model gpt-5.4 \
@@ -133,7 +143,7 @@ Current default reasoning split:
 
 ## How It Works
 
-The pipeline follows the same broad shape as Claude Code `/insights`:
+The pipeline uses a two-stage session analysis flow:
 
 1. Load thread metadata from `state_*.sqlite`
 2. Reuse cached session summaries from `~/.codex-insights-cache/session-meta`
@@ -169,9 +179,37 @@ Review `report.html` and `report.json` before sharing them.
 Useful local commands:
 
 ```bash
+npm install
+npm test
 npm run check
+npm run typecheck
+npm run generate:test-report
 node ./bin/codex-insights.js report --help
 ```
 
+`npm run generate:test-report` writes a deterministic sample report page to `test-artifacts/sample-report/` so you can visually inspect the HTML without using live local Codex data.
+
+TypeScript migration status:
+
+- Runtime code remains JavaScript for now
+- `tsconfig.json` enables `checkJs` so the project can adopt TypeScript incrementally
+- Core report/session shapes live in [lib/types.d.ts](/Users/zhaoyiqun/Projects/claude-code-main/codex-insights/lib/types.d.ts)
+- Interactive CLI design lives in [docs/interactive-flow.md](/Users/zhaoyiqun/Projects/claude-code-main/codex-insights/docs/interactive-flow.md)
+
+## Publishing
+
+If the npm package name `codex-session-insights` is available, publish flow is:
+
+```bash
+npm login
+npm run check
+npm pack --dry-run
+npm publish
+```
+
+The package metadata points at `cosformula/codex-session-insights`:
+
+- repository: `https://github.com/cosformula/codex-session-insights`
+- issues: `https://github.com/cosformula/codex-session-insights/issues`
+
 Internal design docs and local development overlays are intentionally outside the public package boundary.
-# codex-session-insights
