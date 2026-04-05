@@ -4,7 +4,7 @@
   "description": "Generate a report analyzing your Codex sessions.",
   "type": "module",
   "bin": {
-    "codex-session-insights": "./bin/codex-insights.js"
+    "codex-session-insights": "bin/codex-insights.js"
   },
   "files": [
     "bin",
